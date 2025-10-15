@@ -20,7 +20,7 @@ const colors = [
 ];
 
 // Recursive circle drawing function
-function drawRecursiveCircles(x, y, radius, depth, maxDepth, rotation) {
+function drawRecursiveCircles(x, y, radius, depth, maxDepth, rotation, direction) {
     if (depth > maxDepth || radius < 1) {
         return;
     }
@@ -42,7 +42,8 @@ function drawRecursiveCircles(x, y, radius, depth, maxDepth, rotation) {
         const newX = x + Math.cos(angle) * (radius - newRadius);
         const newY = y + Math.sin(angle) * (radius - newRadius);
         
-        drawRecursiveCircles(newX, newY, newRadius, depth + 1, maxDepth, rotation + time * 0.3);
+        // Reverse direction for inner circles
+        drawRecursiveCircles(newX, newY, newRadius, depth + 1, maxDepth, rotation - direction * time * 0.3, -direction);
     }
 }
 
@@ -111,7 +112,7 @@ function animate() {
     
     // Draw main recursive circles
     const baseRadius = Math.min(canvas.width, canvas.height) * 0.25;
-    drawRecursiveCircles(centerX, centerY, baseRadius, 0, 4, time);
+    drawRecursiveCircles(centerX, centerY, baseRadius, 0, 4, time, 1);
     
     // Add floating recursive patterns
     const numFloating = 3;
@@ -128,7 +129,8 @@ function animate() {
             floatingRadius,
             0,
             3,
-            -time + i
+            -time + i,
+            1
         );
         ctx.restore();
     }
